@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eoka</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f8f8f6;
+  --surface:#ffffff;
+  --text:#111111;
+  --muted:#999999;
+  --border:#e8e8e4;
+  --accent:#111111;
+  --mono:'Courier New',monospace;
+  --sans:system-ui,-apple-system,sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0c0c0c;
+    --surface:#141414;
+    --text:#eeeeee;
+    --muted:#555555;
+    --border:#1e1e1e;
+    --accent:#eeeeee;
+  }
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* noise texture overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+.wrap{max-width:680px;margin:0 auto;padding:72px 28px 120px;position:relative;z-index:1}
+
+/* HEADER */
+.header{margin-bottom:64px}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.name-block{}
+.name{font-size:32px;font-weight:700;letter-spacing:-0.03em;line-height:1}
+.alias{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.05em}
+.status-dot{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  margin-top:6px;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 0 rgba(34,197,94,0.4);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}
+  70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+}
+
+.tagline{
+  font-size:14px;color:var(--muted);
+  margin-bottom:28px;
+  font-family:var(--mono);
+  letter-spacing:0.02em;
+}
+
+.nav-links{display:flex;gap:6px;flex-wrap:wrap}
+.nav-links a{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:0.06em;
+  padding:6px 12px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .2s;
+  display:inline-block;
+}
+.nav-links a:hover{
+  color:var(--text);
+  border-color:var(--text);
+  transform:translateY(-1px);
+}
+
+/* SECTION */
+.sec{margin-bottom:52px}
+.sec-label{
+  font-family:var(--mono);font-size:10px;
+  color:var(--muted);letter-spacing:0.18em;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* SKILLS */
+.skill-row{
+  display:grid;grid-template-columns:130px 1fr;
+  gap:6px 20px;padding:8px 0;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.skill-row:last-child{border-bottom:none}
+.skill-key{color:var(--muted);font-size:12px;font-family:var(--mono);padding-top:1px}
+.skill-val{color:var(--text)}
+
+/* PROJECTS */
+.project{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:20px 22px;
+  margin-bottom:10px;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.project::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:var(--text);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform .25s ease;
+}
+.project:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.07)}
+.project:hover::before{transform:scaleY(1)}
+@media(prefers-color-scheme:dark){
+  .project:hover{box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+}
+
+.proj-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.proj-name{font-weight:600;font-size:15px}
+.proj-type{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em}
+.proj-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px}
+.proj-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.proj-footer{display:flex;justify-content:space-between;align-items:center}
+.proj-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{
+  font-family:var(--mono);font-size:10px;
+  padding:2px 7px;
+  border:1px solid var(--border);
+  color:var(--muted);
+  background:var(--bg);
+}
+.proj-link{
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:0.05em;white-space:nowrap;
+  transition:color .15s;
+  display:flex;align-items:center;gap:4px;
+}
+.proj-link:hover{color:var(--text)}
+.proj-link::after{content:'↗';font-size:11px}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.contact-item{
+  padding:14px 16px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .2s;
+  display:flex;flex-direction:column;gap:3px;
+}
+.contact-item:hover{border-color:var(--text);transform:translateY(-1px)}
+.contact-platform{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em}
+.contact-val{font-family:var(--mono);font-size:12px;color:var(--text)}
+
+/* FOOTER */
+.foot{
+  margin-top:80px;padding-top:24px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:8px;
+}
+.foot-left{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.foot-right{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+
+/* CURSOR BLINK */
+.cursor{display:inline-block;width:8px;height:13px;background:var(--text);vertical-align:middle;margin-left:2px;animation:blink 1.1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* FADE IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.header{animation:fadeUp .5s ease both}
+.sec:nth-child(1){animation:fadeUp .5s .1s ease both}
+.sec:nth-child(2){animation:fadeUp .5s .2s ease both}
+.sec:nth-child(3){animation:fadeUp .5s .3s ease both}
+.foot{animation:fadeUp .5s .4s ease both}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="name-block">
+        <div class="name">eoka <span class="cursor"></span></div>
+      </div>
+      <div class="status-dot"><span class="dot"></span>open to work</div>
+    </div>
+    <div class="tagline">Reverse Engineer · Malware Analyst · C++ Developer</div>
+    <div class="nav-links">
+      <a href="https://github.com/eokaaa" target="_blank">github</a>
+      <a href="https://t.me/usevle" target="_blank">telegram</a>
+      <a href="mailto:eoka.hk.main@gmail.com">email</a>
+      <a href="https://www.linkedin.com/in/eoka-d-3aa255408" target="_blank">linkedin</a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">SKILLS</div>
+    <div class="skill-row"><span class="skill-key">languages</span><span class="skill-val">C++, C, x86-64 ASM</span></div>
+    <div class="skill-row"><span class="skill-key">reversing</span><span class="skill-val">IDA Pro, Ghidra, x64dbg, WinDbg, CFF Explorer, HxD</span></div>
+    <div class="skill-row"><span class="skill-key">malware</span><span class="skill-val">ANY.RUN, VirusTotal, DiE, static &amp; dynamic analysis, IOC</span></div>
+    <div class="skill-row"><span class="skill-key">internals</span><span class="skill-val">WinAPI, PE format, DLL injection, VMT hooking, pattern scanning</span></div>
+    <div class="skill-row"><span class="skill-key">tools</span><span class="skill-val">Cheat Engine, ReClass, Process Hacker, MinHook, ImGui, DirectX 9</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">PROJECTS</div>
+
+    <div class="project">
+      <div class="proj-top">
+        <span class="proj-name">EOHack x64</span>
+        <span class="proj-type">C++ / INTERNAL</span>
+      </div>
+      <div class="proj-sub">Garry's Mod (x64) internal module</div>
+      <div class="proj-desc">
+        Fully reversed and rebuilt from legacy codebase. SDK reconstruction via RE,
+        dynamic pattern scanning (no hardcoded offsets), VMT + trampoline hooks via MinHook,
+        World-to-Screen matrix math, DirectX 9 + ImGui rendering,
+        std::mutex for thread-safe render loop.
+      </div>
+      <div class="proj-footer">
+        <div class="proj-tags">
+          <span class="tag">C++</span><span class="tag">DirectX 9</span><span class="tag">MinHook</span><span class="tag">ImGui</span><span class="tag">VMT</span>
+        </div>
+        <a class="proj-link" href="https://github.com/eokaaa/EOHack-x64" target="_blank">github</a>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="proj-top">
+        <span class="proj-name">DLL Injector</span>
+        <span class="proj-type">C++ / TOOL</span>
+      </div>
+      <div class="proj-sub">Standalone injection utility</div>
+      <div class="proj-desc">
+        LoadLibrary-based DLL injection with ImGui interface. Process and DLL selection, minimal UI.
+      </div>
+      <div class="proj-footer">
+        <div class="proj-tags">
+          <span class="tag">C++</span><span class="tag">WinAPI</span><span class="tag">ImGui</span>
+        </div>
+        <a class="proj-link" href="https://github.com/eokaaa/injector" target="_blank">github</a>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="proj-top">
+        <span class="proj-name">Malware Analysis Reports</span>
+        <span class="proj-type">SECURITY RESEARCH</span>
+      </div>
+      <div class="proj-sub">Ongoing research — MalwareBazaar samples</div>
+      <div class="proj-desc">
+        Static + dynamic methodology: DiE → IDA Pro → ANY.RUN → VirusTotal.
+        Each report includes behavioral analysis, process tree breakdown, and IOC extraction.
+        Covers obfuscation techniques, sandbox evasion, persistence mechanisms, and C2 communication.
+      </div>
+      <div class="proj-footer">
+        <div class="proj-tags">
+          <span class="tag">IDA Pro</span><span class="tag">ANY.RUN</span><span class="tag">IOC</span><span class="tag">YARA</span>
+        </div>
+        <a class="proj-link" href="https://github.com/eokaaa/reports" target="_blank">github</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">CONTACT</div>
+    <div class="contact-grid">
+      <a class="contact-item" href="mailto:eoka.hk.main@gmail.com">
+        <span class="contact-platform">EMAIL</span>
+        <span class="contact-val">eoka.hk.main@gmail.com</span>
+      </a>
+      <a class="contact-item" href="https://t.me/usevle" target="_blank">
+        <span class="contact-platform">TELEGRAM</span>
+        <span class="contact-val">@usevle</span>
+      </a>
+      <a class="contact-item" href="https://github.com/eokaaa" target="_blank">
+        <span class="contact-platform">GITHUB</span>
+        <span class="contact-val">eokaaa</span>
+      </a>
+      <a class="contact-item" href="https://www.linkedin.com/in/eoka-d-3aa255408" target="_blank">
+        <span class="contact-platform">LINKEDIN</span>
+        <span class="contact-val">eoka</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="foot-left">eoka — self-taught, 2026</span>
+    <span class="foot-right"><span class="dot"></span>open to work</span>
+  </div>
+
+</div>
+</body>
+</html>
